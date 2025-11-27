@@ -1,0 +1,120 @@
+<div class="page-header">
+  <h2>Party Master</h2>
+  <div class="actions">
+    <mat-form-field appearance="outline" class="search">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput placeholder="Search..." (keyup)="applyFilter($any($event.target).value)">
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="openAdd()">
+      <mat-icon>add</mat-icon>
+      Add Party
+    </button>
+  </div>
+</div>
+
+<mat-drawer-container class="drawer-container" autosize>
+  <mat-drawer-content>
+    <div class="card">
+      <table mat-table [dataSource]="ds" matSort class="mat-elevation-z1 full-width-table">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Party Name</th>
+          <td mat-cell *matCellDef="let r">{{ r.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="city">
+          <th mat-header-cell *matHeaderCellDef>City</th>
+          <td mat-cell *matCellDef="let r">{{ r.city }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="mobileNo">
+          <th mat-header-cell *matHeaderCellDef>Mobile No</th>
+          <td mat-cell *matCellDef="let r">{{ r.mobileNo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef>State</th>
+          <td mat-cell *matCellDef="let r">{{ r.state }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let r" class="row-actions">
+            <button mat-icon-button (click)="openEdit(r)" matTooltip="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="remove(r)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <mat-paginator [pageSize]="10"></mat-paginator>
+
+      <div *ngIf="!loading() && ds.data.length === 0" class="empty-state">
+        <mat-icon>inbox</mat-icon>
+        <p>No parties found</p>
+      </div>
+    </div>
+  </mat-drawer-content>
+
+  <mat-drawer #drawer position="end" mode="over" class="drawer">
+    <div class="drawer-header">
+      <h3>{{ isEdit() ? 'Edit Party' : 'Add Party' }}</h3>
+      <button mat-icon-button (click)="drawer.close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="drawer-form">
+
+      <!-- Party Name -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Party Name</mat-label>
+        <input matInput formControlName="name" required>
+      </mat-form-field>
+
+      <!-- Address (NO VALIDATION) -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Address</mat-label>
+        <textarea matInput formControlName="address" rows="2"></textarea>
+      </mat-form-field>
+
+      <!-- City -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>City</mat-label>
+        <input matInput formControlName="city" required>
+      </mat-form-field>
+
+      <!-- Mobile -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Mobile No</mat-label>
+        <input matInput formControlName="mobileNo" maxlength="10">
+      </mat-form-field>
+
+      <!-- ⭐ State Autocomplete -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>State</mat-label>
+        <input type="text" matInput formControlName="state" [matAutocomplete]="auto" (input)="filterStates()">
+
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let s of filteredStates" [value]="s">
+            {{ s }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+
+      <div class="drawer-actions">
+        <button mat-stroked-button type="button" (click)="drawer.close()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit">Save</button>
+      </div>
+
+    </form>
+
+  </mat-drawer>
+</mat-drawer-container>

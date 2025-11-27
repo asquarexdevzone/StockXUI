@@ -1,0 +1,9 @@
+<div class="dialog-container">
+  <h3>{{ data.title }}</h3>
+  <p>{{ data.message }}</p>
+
+  <div class="dialog-actions">
+    <button mat-stroked-button color="primary" (click)="cancel()">Cancel</button>
+    <button mat-raised-button color="warn" (click)="confirm()">Delete</button>
+  </div>
+</div>

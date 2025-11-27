@@ -1,0 +1,23 @@
+.dialog-container {
+  padding: 20px;
+  min-width: 320px;
+  text-align: center;
+
+  h3 {
+    margin: 0 0 10px;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+
+  p {
+    font-size: 15px;
+    color: #555;
+    margin-bottom: 20px;
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+}

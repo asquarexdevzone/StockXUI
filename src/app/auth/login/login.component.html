@@ -1,0 +1,35 @@
+<div class="login-wrapper">
+
+  <div class="login-left">
+    <h1>Stock Manager</h1>
+    <p>Smart Inventory & Stock Management System</p>
+  </div>
+
+  <div class="login-right">
+    <div class="login-box">
+
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Login to continue</p>
+
+      <form (ngSubmit)="onLogin()">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix>person</mat-icon>
+          <input matInput placeholder="Username" [(ngModel)]="username" name="username" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-icon matPrefix>lock</mat-icon>
+          <input matInput type="password" placeholder="Password" [(ngModel)]="password" name="password" required>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="login-btn" type="submit">
+          Login
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>

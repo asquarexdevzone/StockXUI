@@ -1,0 +1,51 @@
+<div class="sidebar" [class.collapsed]="isCollapsed()">
+
+  <div class="top-section">
+    <span class="logo" *ngIf="!isCollapsed()">Stock Manager</span>
+    <mat-icon class="toggle-btn" (click)="toggleSidebar()">menu</mat-icon>
+  </div>
+
+  <div class="menu">
+
+    <ng-container *ngFor="let item of filteredMenu">
+
+      <!-- Parent with children -->
+      <div *ngIf="item.children" class="menu-item group" (click)="toggleGroup(item.label)"
+        [class.active]="isActiveGroup(item.children)">
+
+        <mat-icon class="menu-icon">{{ item.icon }}</mat-icon>
+        <span class="menu-label" *ngIf="!isCollapsed()">{{ item.label }}</span>
+
+        <mat-icon class="expand-icon" *ngIf="!isCollapsed()">
+          {{ expandedGroup() === item.label ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </div>
+
+      <!-- Children -->
+      <div class="submenu" *ngIf="expandedGroup() === item.label && !isCollapsed()">
+
+        <div *ngFor="let child of item.children" class="submenu-item" [class.active]="isActive(child.path)"
+          (click)="child.path && router.navigate([child.path])">
+
+          <span>{{ child.label }}</span>
+        </div>
+      </div>
+
+      <!-- Normal Single Menu -->
+      <div *ngIf="!item.children" class="menu-item" [class.active]="isActive(item.path)"
+        (click)="item.path && router.navigate([item.path])">
+
+        <mat-icon class="menu-icon">{{ item.icon }}</mat-icon>
+        <span class="menu-label" *ngIf="!isCollapsed()">{{ item.label }}</span>
+      </div>
+
+    </ng-container>
+  </div>
+
+
+  <div class="logout" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span *ngIf="!isCollapsed()">Logout</span>
+  </div>
+
+</div>
