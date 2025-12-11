@@ -6,7 +6,7 @@ import { Marketer } from '../model/marketer.model';
 @Injectable({ providedIn: 'root' })
 export class MarketerService {
 
-  private api = 'https://localhost:44361/api/Marketer';
+  private api = 'http://stockxapi.vijman.com:82/api/Marketer';
 
   constructor(private http: HttpClient) { }
 

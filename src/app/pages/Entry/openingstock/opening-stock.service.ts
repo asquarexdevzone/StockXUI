@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class OpeningStockService {
 
-  private apiUrl = "https://localhost:44361/api/openingstock";
+  private apiUrl = "http://stockxapi.vijman.com:82/api/openingstock";
 
   constructor(private http: HttpClient) { }
 

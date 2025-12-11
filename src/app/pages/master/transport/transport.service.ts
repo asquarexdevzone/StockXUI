@@ -7,7 +7,7 @@ import { Transport } from '../model/transport.model';
 export class TransportService {
 
   private http = inject(HttpClient);
-  private base = 'https://localhost:44361/api/transports';
+  private base = 'http://stockxapi.vijman.com:82/api/transports';
 
   list(q: string = ''): Observable<Transport[]> {
     return this.http.get<Transport[]>(`${this.base}?q=${q}`);

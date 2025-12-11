@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class SizeService {
-  private base = 'https://localhost:44361/api/sizes';
+  private base = 'http://stockxapi.vijman.com:82/api/sizes';
 
   constructor(private http: HttpClient) {}
 

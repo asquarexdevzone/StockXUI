@@ -5,7 +5,7 @@ import { Grade } from '../model/grade.model';
 @Injectable({ providedIn: 'root' })
 export class GradeService {
   private http = inject(HttpClient);
-  private base = 'https://localhost:44361/api/grades';
+  private base = 'http://stockxapi.vijman.com:82/api/grades';
 
   list(q: string) {
     return this.http.get<Grade[]>(this.base + '?q=' + q);

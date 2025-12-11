@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
-  private base = 'https://localhost:44361/api/order';
+  private base = 'http://stockxapi.vijman.com:82/api/order';
 
   constructor(private http: HttpClient) { }
 

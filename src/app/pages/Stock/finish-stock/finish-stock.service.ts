@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class FinishStockService {
-  private base = 'https://localhost:44361/api/finishstock';
+  private base = 'http://stockxapi.vijman.com:82/api/finishstock';
 
   constructor(private http: HttpClient) {}
 

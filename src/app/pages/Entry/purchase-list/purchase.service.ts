@@ -22,7 +22,7 @@ export interface PurchaseDto {
 
 @Injectable({ providedIn: 'root' })
 export class PurchaseService {
-  private base = 'https://localhost:44361/api/purchase'; // change if your backend path differs
+  private base = 'http://stockxapi.vijman.com:82/api/purchase'; // change if your backend path differs
 
   constructor(private http: HttpClient) { }
 
