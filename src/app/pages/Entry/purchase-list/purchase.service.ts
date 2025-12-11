@@ -16,15 +16,15 @@ export interface PurchaseDto {
   voucherNo: number;
   partyId: number;
   remark?: string;
-  transportNo?: string;
+  billNo?: string;
   items: PurchaseItemDto[];
 }
 
 @Injectable({ providedIn: 'root' })
 export class PurchaseService {
-  private base = 'https://localhost:7249/api/purchase'; // change if your backend path differs
+  private base = 'https://localhost:44361/api/purchase'; // change if your backend path differs
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   list(): Observable<any[]> {
     return this.http.get<any[]>(this.base);
@@ -45,4 +45,11 @@ export class PurchaseService {
   delete(id: number) {
     return this.http.delete(`${this.base}/${id}`);
   }
+
+  // get ID
+  getById(id: number) {
+    return this.http.get<any>(`${this.base}/${id}`);
+  }
+
+
 }

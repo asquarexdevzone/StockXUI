@@ -1,4 +1,6 @@
-/* === PAGE HEADER === */
+/* ------------------------------------
+   PAGE HEADER
+------------------------------------ */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -11,22 +13,24 @@
 .page-header h2 {
   font-size: 22px;
   font-weight: 600;
-  color: #2c3e50;
   margin: 0;
+  color: #2c3e50;
 }
 
-/* === ACTIONS === */
+/* ------------------------------------
+   ACTIONS (SEARCH + ADD BUTTON)
+------------------------------------ */
 .actions {
   display: flex;
   align-items: center;
   gap: 14px;
+  flex-wrap: wrap;
 }
 
-/* === SEARCH FIELD === */
+/* Search Field */
 .actions .mat-mdc-form-field {
   width: 300px;
   height: 44px !important;
-  margin: 0;
 }
 
 .actions .mat-mdc-text-field-wrapper {
@@ -36,7 +40,6 @@
   border: 1px solid #dce3ec;
   display: flex;
   align-items: center;
-  box-sizing: border-box;
   transition: border-color 0.2s ease;
 }
 
@@ -45,44 +48,40 @@
 }
 
 .actions .mat-mdc-form-field-infix {
-  height: 100%;
   padding: 0 !important;
-  display: flex;
   align-items: center;
 }
 
 .actions input {
-  font-size: 14px;
   height: 100%;
+  font-size: 14px;
 }
 
-/* === ADD ITEM BUTTON === */
+/* Add Item Button */
 .actions button[mat-raised-button] {
   height: 44px;
   padding: 0 22px;
   border-radius: 10px;
   font-weight: 600;
-  text-transform: none;
   background: linear-gradient(90deg, #1e88e5, #1565c0) !important;
   color: #fff !important;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 6px;
   box-shadow: 0 3px 6px rgba(21, 101, 192, 0.25);
-  transition: all 0.25s ease;
-  line-height: 44px;
+  transition: 0.25s ease;
 }
 
 .actions button[mat-raised-button]:hover {
   filter: brightness(1.08);
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(21, 101, 192, 0.35);
 }
 
-/* === CARD BACKGROUND (Softer Gray for Contrast) === */
+/* ------------------------------------
+   CARD (TABLE WRAPPER)
+------------------------------------ */
 .card {
-  background: #f9fafb; /* ✅ slightly off-white */
+  background: #f9fafb;
   padding: 22px 24px;
   border-radius: 14px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
@@ -90,10 +89,9 @@
   width: 100%;
   max-width: 98%;
   margin: 0 auto;
-  transition: 0.3s ease;
 }
 
-/* === TABLE === */
+/* Table */
 .full-width-table {
   width: 100%;
   min-width: 800px;
@@ -103,7 +101,6 @@
 .mat-cell {
   padding: 14px 18px;
   font-size: 14px;
-  color: #333;
 }
 
 .mat-header-cell {
@@ -111,67 +108,50 @@
   background: #f2f4f6;
 }
 
+/* ------------------------------------
+   DRAWER CONTAINER
+------------------------------------ */
 .drawer-container {
   height: calc(100vh - 120px);
-  background: transparent;
-  padding: 0 40px 40px 40px;
-  box-sizing: border-box;
+  // padding: 0 40px 40px 40px;
   overflow: hidden;
-  position: relative;
 }
 
+/* Drawer Panel */
 .drawer {
   width: 420px;
-  height: 100vh; /* ✅ Full vertical height */
-  max-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  height: 100vh;
   background: #ffffff;
   border-left: 1px solid #e0e0e0;
   box-shadow: -6px 0 20px rgba(0, 0, 0, 0.15);
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
-  z-index: 100;
-  position: fixed; /* ✅ Keep drawer independent of scroll */
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  position: fixed;
   right: 0;
   top: 0;
-  transition: all 0.3s ease-in-out;
-  overflow: hidden; /* Prevent unwanted side scrollbar */
-}
-.drawer {
-  transform: translateX(100%);
-  &.mat-drawer-opened {
-    transform: translateX(0);
-    transition: transform 0.3s ease-in-out;
-  }
 }
 
-/* Drawer header */
+.drawer.mat-drawer-opened {
+  transform: translateX(0);
+}
+
+/* Drawer Header */
 .drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 22px 24px 12px 24px;
+  padding: 22px 24px;
   border-bottom: 1px solid #f0f0f0;
-
-  h3 {
-    margin: 0;
-    font-weight: 600;
-    color: #2c3e50;
-  }
-
-  button mat-icon {
-    color: #555;
-    transition: color 0.2s;
-  }
-
-  button:hover mat-icon {
-    color: #1e88e5;
-  }
 }
 
+.drawer-header h3 {
+  margin: 0;
+  font-weight: 600;
+}
 
+/* Drawer Form */
 .drawer-form {
   flex: 1;
   overflow-y: auto;
@@ -179,64 +159,30 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-
-  /* Smooth scroll & hide scrollbar */
   scrollbar-width: thin;
-  scrollbar-color: #ccc transparent;
-}
-
-.drawer-form::-webkit-scrollbar {
-  width: 6px;
-}
-.drawer-form::-webkit-scrollbar-thumb {
-  background: #bbb;
-  border-radius: 6px;
-}
-.drawer-form::-webkit-scrollbar-thumb:hover {
-  background: #999;
 }
 
 .drawer-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  padding: 16px 24px 22px 24px;
+  padding: 16px 24px;
   border-top: 1px solid #f0f0f0;
   background: #fafafa;
   position: sticky;
   bottom: 0;
-  z-index: 5;
 }
 
-::ng-deep .mat-drawer-backdrop.mat-drawer-shown {
-  background-color: rgba(0, 0, 0, 0.2) !important;
-  backdrop-filter: blur(2px);
-  transition: all 0.3s ease-in-out;
-}
-
-/* === EMPTY STATE === */
-.empty-state {
-  text-align: center;
-  padding: 50px 0;
-  opacity: 0.75;
-  color: #555;
-
-  mat-icon {
-    font-size: 48px;
-    display: block;
-    margin: 0 auto 10px auto;
-    color: #9e9e9e;
-  }
-}
-
-/* === STATUS PILL === */
+/* ------------------------------------
+   STATUS TAG
+------------------------------------ */
 .pill {
-  background: #e0f7fa;
-  color: #00796b;
-  border-radius: 50px;
   padding: 3px 10px;
+  border-radius: 50px;
   font-size: 13px;
   font-weight: 500;
+  background: #e0f7fa;
+  color: #00796b;
 }
 
 .pill.inactive {
@@ -244,12 +190,49 @@
   color: #c62828;
 }
 
-/* === RESPONSIVE FIX === */
+/* ------------------------------------
+   IMAGE PREVIEW & TABLE IMAGE
+------------------------------------ */
+.item-thumb {
+  width: 45px;
+  height: 45px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.image-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* ------------------------------------
+   EMPTY STATE
+------------------------------------ */
+.empty-state {
+  text-align: center;
+  padding: 50px 0;
+  color: #555;
+  opacity: 0.75;
+}
+
+.empty-state mat-icon {
+  font-size: 48px;
+  color: #9e9e9e;
+}
+
+/* ------------------------------------
+   RESPONSIVE FIXES FOR MOBILE
+------------------------------------ */
 @media (max-width: 768px) {
+
   .page-header {
+    margin: 20px 20px 15px 20px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
   }
 
   .actions {
@@ -265,7 +248,29 @@
     padding: 16px;
   }
 
+  .full-width-table {
+    min-width: 650px; /* reduce for small screens */
+  }
+
+  /* Drawer becomes full width on mobile */
   .drawer {
+    width: 100% !important;
+    border-radius: 0;
+  }
+}
+
+/* Small Phones (≤ 480px) */
+@media (max-width: 480px) {
+  .page-header h2 {
+    font-size: 18px;
+  }
+
+  .actions button {
     width: 100%;
+  }
+
+  .item-thumb {
+    width: 38px;
+    height: 38px;
   }
 }

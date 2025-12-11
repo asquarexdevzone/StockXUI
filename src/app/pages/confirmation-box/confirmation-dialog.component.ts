@@ -13,10 +13,20 @@ import { MatButtonModule } from '@angular/material/button';
       <p style="margin: 0 0 20px; color: #555;">{{ data.message }}</p>
 
       <div style="display: flex; justify-content: center; gap: 12px;">
-        <button mat-stroked-button color="primary" (click)="close(false)">
+
+          <!-- OK Only Button -->
+        <button
+          *ngIf="data.okOnly"
+          mat-raised-button
+          color="primary"
+          (click)="close(true)">
+          OK
+        </button>
+        
+        <button *ngIf="!data.okOnly" mat-stroked-button color="primary" (click)="close(false)">
           Cancel
         </button>
-        <button mat-raised-button color="warn" (click)="close(true)">
+        <button *ngIf="!data.okOnly" mat-raised-button color="warn" (click)="close(true)">
           Delete
         </button>
       </div>
@@ -26,8 +36,8 @@ import { MatButtonModule } from '@angular/material/button';
 export class ConfirmationDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<ConfirmationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string; message: string }
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: { title: string; message: string ; okOnly?: boolean}
+  ) { }
 
   close(result: boolean) {
     this.dialogRef.close(result);

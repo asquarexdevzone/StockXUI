@@ -51,17 +51,19 @@ export class OrderListComponent implements OnInit, AfterViewInit {
   parties: any[] = [];
   items: any[] = [];
   sizes: any[] = [];
-  grades: any[] = [];
+  // grades: any[] = [];
 
   form!: FormGroup;
   editingId: number | null = null;
+  search: string = '';
+
 
   private fb = inject(FormBuilder);
   private api = inject(OrderService);
   private partyApi = inject(PartyService);
   private itemApi = inject(ItemService);
   private sizeApi = inject(SizeService);
-  private gradeApi = inject(GradeService);
+  // private gradeApi = inject(GradeService);
   private snack = inject(MatSnackBar);
   private dialog = inject(MatDialog);
 
@@ -71,7 +73,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
       voucherNo: ['', Validators.required],
       partyId: ['', Validators.required],
       remark: [''],
-      transportNo: [''],
+      billNo: [''],
       details: this.fb.array([])
     });
   }
@@ -105,14 +107,14 @@ export class OrderListComponent implements OnInit, AfterViewInit {
     this.partyApi.list('').subscribe(r => this.parties = r);
     this.itemApi.list('').subscribe(r => this.items = r);
     this.sizeApi.list('').subscribe(r => this.sizes = r);
-    this.gradeApi.list('').subscribe(r => this.grades = r);
+    // this.gradeApi.list('').subscribe(r => this.grades = r);
   }
 
   createDetailFormGroup(): FormGroup {
     return this.fb.group({
       itemId: ['', Validators.required],
       sizeId: ['', Validators.required],
-      gradeId: ['', Validators.required],
+      // gradeId: ['', Validators.required],
       boxQty: ['', [Validators.required, Validators.min(1)]],
       sqmt: [{ value: '', disabled: true }]
     });
@@ -146,7 +148,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
 
   openAdd() {
     this.editingId = null;
-    
+
     while (this.details.length !== 0) {
       this.details.removeAt(0);
     }
@@ -155,9 +157,9 @@ export class OrderListComponent implements OnInit, AfterViewInit {
 
     this.form.patchValue({
       date: new Date().toISOString().substring(0, 10),
-      partyId: '', 
-      remark: '', 
-      transportNo: ''
+      partyId: '',
+      remark: '',
+      billNo: ''
     });
 
     this.api.getNextVoucherNo().subscribe(no => {
@@ -169,7 +171,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
 
   openEdit(order: any) {
     this.editingId = order.id;
-    
+
     this.api.getById(order.id).subscribe({
       next: (fullOrder) => {
         while (this.details.length !== 0) {
@@ -181,7 +183,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
           voucherNo: fullOrder.voucherNo,
           partyId: this.getPartyIdByName(fullOrder.partyName),
           remark: fullOrder.remark || '',
-          transportNo: fullOrder.transportNo || ''
+          billNo: fullOrder.billNo || ''
         });
 
         if (fullOrder.details && fullOrder.details.length > 0) {
@@ -190,7 +192,7 @@ export class OrderListComponent implements OnInit, AfterViewInit {
             detailGroup.patchValue({
               itemId: detail.itemId,
               sizeId: detail.sizeId,
-              gradeId: detail.gradeId,
+              // gradeId: detail.gradeId,
               boxQty: detail.boxQty,
               sqmt: detail.sqmt
             });
@@ -199,7 +201,6 @@ export class OrderListComponent implements OnInit, AfterViewInit {
         } else {
           this.addItem();
         }
-
         this.drawer.open();
       },
       error: (error) => {
@@ -232,18 +233,18 @@ export class OrderListComponent implements OnInit, AfterViewInit {
       voucherNo: this.form.value.voucherNo,
       partyId: Number(this.form.value.partyId),
       remark: this.form.value.remark,
-      transportNo: this.form.value.transportNo,
+      billNo: this.form.value.billNo,
       details: this.details.value.map((detail: any) => ({
         itemId: Number(detail.itemId),
         sizeId: Number(detail.sizeId),
-        gradeId: Number(detail.gradeId),
+        // gradeId: Number(detail.gradeId),
         boxQty: Number(detail.boxQty),
         sqmt: Number(detail.sqmt) || 0
       }))
     };
 
-    const req = this.editingId ? 
-      this.api.update(this.editingId, payload) : 
+    const req = this.editingId ?
+      this.api.update(this.editingId, payload) :
       this.api.create(payload);
 
     req.subscribe({
@@ -253,9 +254,20 @@ export class OrderListComponent implements OnInit, AfterViewInit {
         this.snack.open(this.editingId ? 'Updated' : 'Added', 'Close', { duration: 2000 });
       },
       error: (error) => {
-        this.snack.open('Error saving order', 'Close', { duration: 3000 });
-        console.error('Save error:', error);
+        const msg = error.error?.message || "Error saving order";
+
+        this.dialog.open(ConfirmationDialogComponent, {
+          width: '360px',
+          data: {
+            title: 'Warning',
+            message: msg,
+            okOnly: true  
+          }
+        });
+
+        console.error("Save error:", error);
       }
+
     });
   }
 
@@ -290,4 +302,15 @@ export class OrderListComponent implements OnInit, AfterViewInit {
       this.snack.open("📄 PDF Exported", "Close", { duration: 2000 });
     });
   }
+  applyFilter(value: string) {
+  this.search = value.trim().toLowerCase();
+  this.ds.filter = this.search;
+
+  // Optional: keep paginator at first page after filtering
+  if (this.ds.paginator) {
+    this.ds.paginator.firstPage();
+  }
+}
+
+  
 }

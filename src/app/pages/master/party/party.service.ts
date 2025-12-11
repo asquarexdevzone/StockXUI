@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PartyService {
-  private base = 'https://localhost:7249/api/parties';
+  private base = 'https://localhost:44361/api/parties';
 
   constructor(private http: HttpClient) {}
 

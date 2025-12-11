@@ -1,5 +1,99 @@
-<h2 style="margin-bottom: 20px; font-weight: 600;">Dashboard</h2>
+<h2 class="page-title">Dashboard</h2>
 
+<!-- WELCOME BANNER -->
 <div class="dashboard-box">
   Welcome to Stock Management Dashboard
+</div>
+
+<!-- FILTERS -->
+<div class="filter-container">
+  <label class="filter-label">Filter by Item:</label>
+
+  <select class="item-select-data" [(ngModel)]="selectedItemId" (change)="applyFilters()">
+    <option [ngValue]="null">All Items</option>
+    <option *ngFor="let item of items" [value]="item.id">{{ item.name }}</option>
+  </select>
+
+  <label class="filter-label">From:</label>
+  <input class="item-select-data" type="date" [(ngModel)]="fromDate" (change)="applyFilters()" />
+
+  <label class="filter-label">To:</label>
+  <input class="item-select-data" type="date" [(ngModel)]="toDate" (change)="applyFilters()" />
+</div>
+
+<div class="dashboard-container">
+
+  <!-- SUMMARY CARDS -->
+  <div class="cards-row">
+    <div class="card-col">
+      <div class="stat-card blue">
+        <h1>{{ summary?.openingStock }}</h1>
+        <p>Opening Stock</p>
+      </div>
+    </div>
+    <div class="card-col">
+      <div class="stat-card green">
+        <h1>{{ summary?.finishStock }}</h1>
+        <p>Finish Stock</p>
+      </div>
+    </div>
+    <div class="card-col">
+      <div class="stat-card orange">
+        <h1>{{ summary?.afterOrderStock }}</h1>
+        <p>After Order Stock</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHART ROW 1 -->
+  <div class="chart-row">
+    <div class="chart-col">
+      <div class="chart-card">
+        <h5>Opening Stock</h5>
+        <canvas id="openingChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-col">
+      <div class="chart-card">
+        <h5>Purchase</h5>
+        <canvas id="purchaseChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHART ROW 2 -->
+  <div class="chart-row">
+    <div class="chart-col">
+      <div class="chart-card">
+        <h5>Item Wise Stock Comparison</h5>
+        <canvas id="itemWiseChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-col">
+      <div class="chart-card">
+        <h5>Finish Stock</h5>
+        <canvas id="finishChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHART ROW 3 -->
+  <div class="chart-row">
+    <div class="chart-col">
+      <div class="chart-card">
+        <h5>After Order Stock</h5>
+        <canvas id="afterOrderChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-col">
+      <div class="chart-card">
+        <h5>Marketer</h5>
+        <canvas id="partyPieChart"></canvas>
+      </div>
+    </div>
+  </div>
+
 </div>

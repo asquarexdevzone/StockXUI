@@ -16,10 +16,26 @@ export class SidebarComponent {
   constructor(public auth: AuthService, public router: Router) { }
 
   isCollapsed = signal(false);
+  isMobileOpen = false;
+
 
   toggleSidebar() {
-    this.isCollapsed.update(v => !v);
+    if (window.innerWidth < 768) {
+      this.isMobileOpen = !this.isMobileOpen;  // mobile behavior
+    } else {
+      this.isCollapsed.update(v => !v);        // desktop behavior
+    }
   }
+  closeMobileSidebar() {
+    this.isMobileOpen = false;
+  }
+  navigate(path: string) {
+    this.router.navigate([path]);
+    if (window.innerWidth < 768) {
+      this.isMobileOpen = false;
+    }
+  }
+
 
   menuItems = [
     { label: 'Dashboard', icon: 'dashboard', path: '/dashboard' },
@@ -28,10 +44,11 @@ export class SidebarComponent {
       icon: 'category',
       children: [
         { label: 'Item Master', path: '/master/items' },
-        { label: 'Party Master', path: '/master/party' },
         { label: 'Size Master', path: '/master/size' },
-        { label: 'Grade Master', path: '/master/grade' },
-        { label: 'Transport Master', path: '/master/transport' }
+        { label: 'Marketer Master', path: '/master/marketer' },
+         { label: 'Party Master', path: '/master/party' },
+        // { label: 'Grade Master', path: '/master/grade' },
+        // { label: 'Transport Master', path: '/master/transport' }
       ]
     },
     {
@@ -51,13 +68,11 @@ export class SidebarComponent {
         { label: 'Finish Stock', path: '/stock/finish-stock' },
         { label: 'After Order Stock', path: '/stock/after-order-stock' }
       ]
-    },
-    { label: 'Products', icon: 'inventory_2', path: '/products', roles: ['Admin'] },
+    }
   ];
 
   get filteredMenu() {
-    const role = this.auth.getRole();
-    return this.menuItems.filter(m => !m.roles || m.roles.includes(role));
+    return this.menuItems;
   }
 
   isActive(path?: string) {

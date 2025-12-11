@@ -28,7 +28,16 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class FinishStockComponent implements OnInit {
 
-  displayedColumns = ['item', 'size', 'grade', 'boxQty', 'sqft'];
+  displayedColumns = [
+  'itemName',
+  'sizeName',
+  'openingBox',
+  'sampleQty',
+  'breakage',
+  'finalBox',
+  'finalSqft'
+];
+
   ds = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

@@ -1,15 +1,77 @@
+/* --------------------------
+   HEADER WRAPPER
+---------------------------*/
 .header {
-  height: 64px;
+  height: 60px;
+  width: 100%;
   background: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,0.12);
   display: flex;
-  justify-content: flex-end;
   align-items: center;
-  padding: 0 25px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  font-family: 'Inter', sans-serif;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 2000;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-.header span {
-  font-weight: 500;
-  color: #444;
+/* --------------------------
+   LEFT SECTION
+---------------------------*/
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* --------------------------
+   RIGHT SECTION (WELCOME TEXT)
+---------------------------*/
+.header-right {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;     /* prevents breaking */
+  overflow: hidden;        /* avoids overflow */
+  text-overflow: ellipsis; /* adds "..." if too long */
+}
+
+/* --------------------------
+   MOBILE TOGGLE BUTTON
+---------------------------*/
+.mobile-toggle-btn {
+  display: none; /* hidden on desktop */
+  font-size: 28px;
+  color: #333;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.mobile-toggle-btn:hover {
+  background: rgba(0,0,0,0.08);
+}
+
+/* --------------------------
+   RESPONSIVE FIXES
+---------------------------*/
+@media (max-width: 768px) {
+
+  .header {
+    padding: 0 12px;
+  }
+
+  .header-right {
+    font-size: 14px;         /* smaller text for small screens */
+    max-width: 120px;        /* prevent overflow */
+    text-align: right;
+  }
+
+  .mobile-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

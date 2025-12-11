@@ -12,29 +12,45 @@
 <div class="card">
   <table mat-table [dataSource]="ds" matSort class="mat-elevation-z1 full-width-table">
 
-    <ng-container matColumnDef="item">
+    <ng-container matColumnDef="itemName">
       <th mat-header-cell *matHeaderCellDef>Item</th>
       <td mat-cell *matCellDef="let r">{{ r.itemName }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="size">
+    <ng-container matColumnDef="sizeName">
       <th mat-header-cell *matHeaderCellDef>Size</th>
       <td mat-cell *matCellDef="let r">{{ r.sizeName }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="grade">
+    <!-- <ng-container matColumnDef="gradeName">
       <th mat-header-cell *matHeaderCellDef>Grade</th>
       <td mat-cell *matCellDef="let r">{{ r.gradeName }}</td>
+    </ng-container> -->
+
+    <ng-container matColumnDef="openingBox">
+      <th mat-header-cell *matHeaderCellDef>Opening Box</th>
+      <td mat-cell *matCellDef="let r">{{ r.openingBox }}</td>
+    </ng-container>
+    
+    <ng-container matColumnDef="sampleQty">
+      <th mat-header-cell *matHeaderCellDef>Sample Qty</th>
+      <td mat-cell *matCellDef="let r">{{ r.sampleQty }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="boxQty">
-      <th mat-header-cell *matHeaderCellDef>Box Qty</th>
-      <td mat-cell *matCellDef="let r">{{ r.boxQty }}</td>
+    <ng-container matColumnDef="breakage">
+      <th mat-header-cell *matHeaderCellDef>Breakage</th>
+      <td mat-cell *matCellDef="let r">{{ r.breakage }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="sqft">
-      <th mat-header-cell *matHeaderCellDef>Total SqFt</th>
-      <td mat-cell *matCellDef="let r">{{ r.sqft }}</td>
+
+    <ng-container matColumnDef="finalBox">
+      <th mat-header-cell *matHeaderCellDef>Final Box</th>
+      <td mat-cell *matCellDef="let r">{{ r.finalBox }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="finalSqft">
+      <th mat-header-cell *matHeaderCellDef>Final SqFt</th>
+      <td mat-cell *matCellDef="let r">{{ r.finalSqft }}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

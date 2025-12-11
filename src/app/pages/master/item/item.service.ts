@@ -12,7 +12,7 @@ export interface Item {
 
 @Injectable({ providedIn: 'root' })
 export class ItemService {
-  private api = 'https://localhost:7249/api/items'; // ✅ Update if port changes
+  private api = 'https://localhost:44361/api/items'; // ✅ Update if port changes
 
   constructor(private http: HttpClient) { }
 

@@ -1,10 +1,17 @@
 <!-- /src/app/pages/Entry/dispatch/dispatch-list.component.html -->
 <div class="page-header">
   <h2>Order Entry</h2>
+  <div class="actions">
+    <mat-form-field appearance="outline" class="search">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput placeholder="Search items..." (keyup)="applyFilter($any($event.target).value)">
+    </mat-form-field>
 
-  <button mat-raised-button color="primary" (click)="openAdd()">
+
+    <button mat-raised-button color="primary" (click)="openAdd()">
     <mat-icon>add</mat-icon> Add Order
   </button>
+  </div>
 </div>
 
 <mat-drawer-container class="drawer-container">
@@ -101,8 +108,8 @@
         </mat-form-field>
 
         <mat-form-field class="full">
-          <mat-label>Transport No</mat-label>
-          <input matInput formControlName="transportNo">
+          <mat-label>Bill No</mat-label>
+          <input matInput formControlName="billNo">
         </mat-form-field>
       </div>
 
@@ -139,12 +146,12 @@
                 </mat-select>
               </mat-form-field>
 
-              <mat-form-field class="field-full">
+              <!-- <mat-form-field class="field-full">
                 <mat-label>Grade</mat-label>
                 <mat-select formControlName="gradeId">
                   <mat-option *ngFor="let grade of grades" [value]="grade.id">{{ grade.name }}</mat-option>
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field> -->
 
               <mat-form-field class="field-half">
                 <mat-label>Quantity (Box)</mat-label>

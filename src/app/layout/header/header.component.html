@@ -1,3 +1,14 @@
 <div class="header">
-  <span>Welcome, {{ auth.getRole() }}</span>
+
+  <div class="header-left">
+    <!-- Mobile Toggle Button -->
+    <mat-icon class="mobile-toggle-btn" (click)="mobileToggle.emit()" aria-label="Open sidebar">
+      menu
+    </mat-icon>
+  </div>
+
+  <div class="header-right">
+    Welcome, {{ auth.getRole() }}
+  </div>
+
 </div>

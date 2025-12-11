@@ -5,7 +5,8 @@ import { FormBuilder, Validators, FormGroup, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { PartyService } from './party.service';
 import { Party } from '../model/party.model';
-
+import { Marketer } from '../model/marketer.model';
+import { MarketerService } from '../marketer/marketer.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -42,11 +43,16 @@ export class PartyListComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
     @ViewChild('drawer') drawer!: MatDrawer;
+    private marketerApi = inject(MarketerService);
 
-    displayedColumns = ['name', 'city', 'mobileNo', 'state', 'actions'];
+
+    displayedColumns = ['name', 'city', 'mobileNo', 'marketer', 'actions'];
     ds = new MatTableDataSource<Party>([]);
     loading = signal(false);
     search = signal('');
+    //
+    marketers: Marketer[] = [];
+
 
     editingId = signal<number | null>(null);
     isEdit = computed(() => this.editingId() !== null);
@@ -58,17 +64,17 @@ export class PartyListComponent implements OnInit, AfterViewInit {
     private dialog = inject(MatDialog);
     private snack = inject(MatSnackBar);
 
-    states = [
-        "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-        "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
-        "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
-        "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
-        "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
-        "Uttar Pradesh", "Uttarakhand", "West Bengal",
-        "Andaman and Nicobar Islands", "Chandigarh", "Dadra & Nagar Haveli",
-        "Daman & Diu", "Delhi", "Jammu & Kashmir", "Ladakh", "Lakshadweep",
-        "Puducherry"
-    ];
+    // states = [
+    //     "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+    //     "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
+    //     "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
+    //     "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+    //     "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura",
+    //     "Uttar Pradesh", "Uttarakhand", "West Bengal",
+    //     "Andaman and Nicobar Islands", "Chandigarh", "Dadra & Nagar Haveli",
+    //     "Daman & Diu", "Delhi", "Jammu & Kashmir", "Ladakh", "Lakshadweep",
+    //     "Puducherry"
+    // ];
 
     constructor() {
         this.form = this.fb.group({
@@ -76,20 +82,29 @@ export class PartyListComponent implements OnInit, AfterViewInit {
             address: [''],        // no validation
             city: ['', Validators.required],
             mobileNo: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
-            state: ['', Validators.required]
+            marketerId: [null]
+            // state: ['', Validators.required]
         });
     }
 
-    filteredStates: string[] = [...this.states];
+    // filteredStates: string[] = [...this.states];
 
-    filterStates() {
-        const search = this.form.get('state')?.value?.toLowerCase() || '';
-        this.filteredStates = this.states.filter(s =>
-            s.toLowerCase().includes(search)
-        );
-    }
+    // filterStates() {
+    //     const search = this.form.get('state')?.value?.toLowerCase() || '';
+    //     this.filteredStates = this.states.filter(s =>
+    //         s.toLowerCase().includes(search)
+    //     );
+    // }
     ngOnInit() {
         this.load();
+        // load marketers for dropdown
+        this.marketerApi.list().subscribe({
+            next: res => this.marketers = res,
+            error: err => {
+                console.error('Failed to load marketers', err);
+                // optionally show a snack
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -136,7 +151,9 @@ export class PartyListComponent implements OnInit, AfterViewInit {
             address: row.address,
             city: row.city,
             mobileNo: row.mobileNo,
-            state: row.state
+            // 
+            marketrId: row.marketerId
+
         });
 
         this.drawer.open();

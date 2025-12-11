@@ -24,7 +24,7 @@ import { ConfirmationDialogComponent } from '../../confirmation-box/confirmation
 
 import { ItemService } from '../../master/item/item.service';
 import { SizeService } from '../../master/size/size.service';
-import { GradeService } from '../../master/grade/grade.service';
+
 
 @Component({
   standalone: true,
@@ -45,13 +45,13 @@ export class OpeningStockListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('drawer') drawer!: MatDrawer;
 
-  displayedColumns = ['item', 'size', 'grade', 'boxQty', 'totalSqft', 'actions'];
+  displayedColumns = ['item', 'size',  'boxQty', 'totalSqft', 'SampleQty','breakage', 'actions'];
   ds = new MatTableDataSource<any>([]);
   search = signal('');
 
   items: any[] = [];
   sizes: any[] = [];
-  grades: any[] = [];
+  
 
   form!: FormGroup;
   editingId = signal<number | null>(null);
@@ -63,14 +63,15 @@ export class OpeningStockListComponent implements OnInit, AfterViewInit {
   private snack = inject(MatSnackBar);
   private itemApi = inject(ItemService);
   private sizeApi = inject(SizeService);
-  private gradeApi = inject(GradeService);
+
 
   constructor() {
     this.form = this.fb.group({
       itemId: ['', Validators.required],
       sizeId: ['', Validators.required],
-      gradeId: ['', Validators.required],
       boxQty: ['', Validators.required],
+      sampleQty: ['', Validators.required],
+      breakage: ['', Validators.required],
       sqft: [{ value: '', disabled: true }]   // FINAL CORRECT CONTROL
     });
   }
@@ -88,7 +89,6 @@ export class OpeningStockListComponent implements OnInit, AfterViewInit {
   loadMasters() {
     this.itemApi.list('').subscribe(res => this.items = res);
     this.sizeApi.list('').subscribe(res => this.sizes = res);
-    this.gradeApi.list('').subscribe(res => this.grades = res);
   }
 
   load() {
@@ -124,15 +124,31 @@ export class OpeningStockListComponent implements OnInit, AfterViewInit {
   openEdit(row: any) {
     this.editingId.set(row.id);
 
-    this.form.patchValue({
-      itemId: row.itemId,
-      sizeId: row.sizeId,
-      gradeId: row.gradeId,
-      boxQty: row.boxQty,
-      sqft: row.totalSqft   // API RETURNS totalSqft → map to form.sqft
-    });
+    // 1️⃣ Fetch full data from API
+    this.api.getById(row.id).subscribe({
+      next: (data) => {
 
-    this.drawer.open();
+        // 2️⃣ Patch form with correct values
+        this.form.patchValue({
+          itemId: data.itemId,
+          sizeId: data.sizeId,
+          boxQty: data.boxQty,
+          sqft: data.totalSqft,
+          sampleQty: data.sampleQty,
+          breakage: data.breakage
+        });
+
+        // 3️⃣ Recalculate SqFt if needed
+        this.calculateSqft();
+
+        // 4️⃣ Open drawer after patching
+        this.drawer.open();
+      },
+      error: (err) => {
+        console.error("Error loading data", err);
+        this.snack.open("❌ Failed to load data", "Close", { duration: 2500 });
+      }
+    });
   }
 
   save() {
@@ -175,7 +191,11 @@ export class OpeningStockListComponent implements OnInit, AfterViewInit {
 
 
   applyFilter(v: string) {
-    this.search.set(v);
-    this.load();
+    this.ds.filter = v.trim().toLowerCase();
+
+    if (this.ds.paginator) {
+      this.ds.paginator.firstPage();
+    }
   }
+
 }

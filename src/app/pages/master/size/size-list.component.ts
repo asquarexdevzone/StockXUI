@@ -103,7 +103,11 @@ export class SizeListComponent implements OnInit, AfterViewInit {
 
   openEdit(row: Size) {
     this.editingId.set(row.id);
-    this.form.patchValue({ name: row.name }); // FIXED
+    // ✅ Patch both fields (name + sqMtr)
+    this.form.patchValue({
+      name: row.name,
+      sqMtr: row.sqMtr
+    });
     this.drawer.open();
   }
 

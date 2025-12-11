@@ -33,15 +33,20 @@ export const routes: Routes = [
           import('./pages/master/size/size-list.component').then(m => m.SizeListComponent)
       },
       {
-        path: 'master/grade',
+        path: 'master/marketer',
         loadComponent: () =>
-          import('./pages/master/grade/grade-list.component').then(m => m.GradeListComponent)
+          import('./pages/master/marketer/marketer.component').then(m => m.MarketerComponent)
       },
-      {
-        path: 'master/transport',
-        loadComponent: () =>
-          import('./pages/master/transport/transport-list.component').then(m => m.TransportListComponent)
-      },
+      // {
+      //   path: 'master/grade',
+      //   loadComponent: () =>
+      //     import('./pages/master/grade/grade-list.component').then(m => m.GradeListComponent)
+      // },
+      // {
+      //   path: 'master/transport',
+      //   loadComponent: () =>
+      //     import('./pages/master/transport/transport-list.component').then(m => m.TransportListComponent)
+      // },
       {
         path: 'entry/opening-stock',
         loadComponent: () =>

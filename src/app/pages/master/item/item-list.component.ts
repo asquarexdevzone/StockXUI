@@ -139,6 +139,16 @@ export class ItemListComponent implements OnInit, AfterViewInit {
   openEdit(row: Item) {
     this.editingId.set(row.id);
     this.form.patchValue({ name: row.name, isActive: row.isActive });
+    // ✅ Show stored image if available
+    this.previewUrl = row.imageUrl ? row.imageUrl : null;
+
+    // Reset file state so user can upload new one
+    this.selectedFile = null;
+
+    // Clear file input
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
     setTimeout(() => this.drawer?.open(), 0);
   }
 

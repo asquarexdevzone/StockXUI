@@ -4,9 +4,9 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
-  private base = 'https://localhost:7249/api/order';
+  private base = 'https://localhost:44361/api/order';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   list() {
     return this.http.get<any[]>(this.base);
@@ -21,8 +21,9 @@ export class OrderService {
   }
 
   create(payload: any) {
-    return this.http.post(this.base, payload);
+    return this.http.post(`${this.base}/create`, payload);
   }
+
 
   update(id: number, payload: any) {
     return this.http.put(`${this.base}/${id}`, payload);

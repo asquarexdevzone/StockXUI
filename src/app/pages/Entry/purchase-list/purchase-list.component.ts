@@ -63,7 +63,7 @@ export class PurchaseListComponent implements OnInit, AfterViewInit {
   parties: any[] = [];
   items: any[] = [];
   sizes: any[] = [];
-  grades: any[] = [];
+  // grades: any[] = [];
 
   editingId: number | null = null;
 
@@ -72,7 +72,7 @@ export class PurchaseListComponent implements OnInit, AfterViewInit {
   private partyApi = inject(PartyService);
   private itemApi = inject(ItemService);
   private sizeApi = inject(SizeService);
-  private gradeApi = inject(GradeService);
+  // private gradeApi = inject(GradeService);
   private dialog = inject(MatDialog);
   private snack = inject(MatSnackBar);
 
@@ -82,7 +82,7 @@ export class PurchaseListComponent implements OnInit, AfterViewInit {
       voucherNo: ['', Validators.required],
       partyId: ['', Validators.required],
       remark: [''],
-      transportNo: [''],
+      billNo: [''],
       details: this.fb.array([])   // 🚀 FormArray for item cards
     });
   }
@@ -94,6 +94,7 @@ export class PurchaseListComponent implements OnInit, AfterViewInit {
     return this.form.get('details') as FormArray;
   }
 
+
   // ======================================
   // CREATE ITEM FORM GROUP
   // ======================================
@@ -101,7 +102,7 @@ export class PurchaseListComponent implements OnInit, AfterViewInit {
     return this.fb.group({
       itemId: ['', Validators.required],
       sizeId: ['', Validators.required],
-      gradeId: ['', Validators.required],
+      // gradeId: ['', Validators.required],
       boxQty: ['', Validators.required],
       breakageBox: [0],
       sqmt: [{ value: 0, disabled: true }]
@@ -125,8 +126,9 @@ export class PurchaseListComponent implements OnInit, AfterViewInit {
     this.partyApi.list('').subscribe(r => this.parties = r);
     this.itemApi.list('').subscribe(r => this.items = r);
     this.sizeApi.list('').subscribe(r => this.sizes = r);
-    this.gradeApi.list('').subscribe(r => this.grades = r);
+    // this.gradeApi.list('').subscribe(r => this.grades = r);
   }
+
 
   // ======================================
   // LOAD PURCHASE LIST
@@ -201,31 +203,59 @@ export class PurchaseListComponent implements OnInit, AfterViewInit {
   // ======================================
   openEdit(m: any) {
     this.editingId = m.id;
-    this.form.patchValue({
-      date: m.date,
-      voucherNo: m.voucherNo,
-      partyId: m.partyId,
-      remark: m.remark,
-      transportNo: m.transportNo
+
+    this.api.getById(m.id).subscribe({
+      next: (full) => {
+
+        // Clear old items
+        while (this.details.length !== 0) {
+          this.details.removeAt(0);
+        }
+
+        // Patch master fields
+        this.form.patchValue({
+          date: full.date,
+          voucherNo: full.voucherNo,
+          partyId: full.partyId,
+          remark: full.remark ?? '',
+          billNo: full.billNo ?? ''
+        });
+
+        // Patch details
+        if (full.items && full.items.length > 0) {
+
+          full.items.forEach((it: any) => {
+            const fg = this.createItem();
+
+            fg.patchValue({
+              itemId: it.itemId,
+              sizeId: it.sizeId,
+              // gradeId: it.gradeId,
+              boxQty: it.boxQty,
+              breakageBox: it.breakageBox,
+              sqmt: it.sqmt
+            });
+
+            this.details.push(fg);
+
+            // Recalculate SQMT after patching (important)
+            const index = this.details.length - 1;
+            this.calculateSqmt(index);
+          });
+
+        } else {
+          this.addItem();
+        }
+
+        this.drawer.open();
+      },
+
+      error: () => {
+        this.snack.open("❌ Error loading purchase data", "Close", { duration: 2500 });
+      }
     });
-
-    this.details.clear();
-
-    m.items.forEach((it: any) => {
-      const fg = this.createItem();
-      fg.patchValue({
-        itemId: it.itemId,
-        sizeId: it.sizeId,
-        gradeId: it.gradeId,
-        boxQty: it.boxQty,
-        breakageBox: it.breakageBox,
-        sqmt: it.sqmt
-      });
-      this.details.push(fg);
-    });
-
-    this.drawer.open();
   }
+
 
   // ======================================
   // SAVE PURCHASE
@@ -249,7 +279,7 @@ export class PurchaseListComponent implements OnInit, AfterViewInit {
       voucherNo: Number(this.form.value.voucherNo),
       partyId: Number(this.form.value.partyId),
       remark: this.form.value.remark,
-      transportNo: this.form.value.transportNo,
+      billNo: this.form.value.billNo,
       items
     };
 
@@ -293,4 +323,5 @@ export class PurchaseListComponent implements OnInit, AfterViewInit {
   applyFilter(v: string) {
     this.ds.filter = v.trim().toLowerCase();
   }
+
 }

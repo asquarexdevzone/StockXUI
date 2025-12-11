@@ -500,3 +500,20 @@
     width: 100%;
   }
 }
+@media (max-width: 768px) {
+  .actions {
+    display: flex;
+    flex-direction: column !important;
+    width: 100%;
+    align-items: stretch !important;
+    gap: 12px;
+  }
+
+  .actions .mat-mdc-form-field {
+    width: 100% !important;
+  }
+
+  .actions button {
+    width: 100% !important;
+  }
+}

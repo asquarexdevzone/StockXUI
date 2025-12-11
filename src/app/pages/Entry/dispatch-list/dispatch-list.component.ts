@@ -50,7 +50,7 @@ export class DispatchListComponent implements OnInit, AfterViewInit {
   parties: any[] = [];
   items: any[] = [];
   sizes: any[] = [];
-  grades: any[] = [];
+  // grades: any[] = [];
 
   form!: FormGroup;
   editingId: number | null = null;
@@ -60,7 +60,7 @@ export class DispatchListComponent implements OnInit, AfterViewInit {
   private partyApi = inject(PartyService);
   private itemApi = inject(ItemService);
   private sizeApi = inject(SizeService);
-  private gradeApi = inject(GradeService);
+  // private gradeApi = inject(GradeService);
   private snack = inject(MatSnackBar);
   private dialog = inject(MatDialog);
 
@@ -70,7 +70,7 @@ export class DispatchListComponent implements OnInit, AfterViewInit {
       voucherNo: ['', Validators.required],
       partyId: ['', Validators.required],
       remark: [''],
-      transportNo: [''],
+      billNo: [''],
       details: this.fb.array([]) // Array for multiple items
     });
   }
@@ -106,7 +106,7 @@ export class DispatchListComponent implements OnInit, AfterViewInit {
     this.partyApi.list('').subscribe(r => this.parties = r);
     this.itemApi.list('').subscribe(r => this.items = r);
     this.sizeApi.list('').subscribe(r => this.sizes = r);
-    this.gradeApi.list('').subscribe(r => this.grades = r);
+    // this.gradeApi.list('').subscribe(r => this.grades = r);
   }
 
   // Create a new detail form group
@@ -114,7 +114,7 @@ export class DispatchListComponent implements OnInit, AfterViewInit {
     return this.fb.group({
       itemId: ['', Validators.required],
       sizeId: ['', Validators.required],
-      gradeId: ['', Validators.required],
+      // gradeId: ['', Validators.required],
       boxQty: ['', [Validators.required, Validators.min(1)]],
       sqmt: [{ value: '', disabled: true }]
     });
@@ -164,7 +164,7 @@ export class DispatchListComponent implements OnInit, AfterViewInit {
       date: new Date().toISOString().substring(0, 10),
       partyId: '',
       remark: '',
-      transportNo: ''
+      billNo: ''
     });
 
     this.api.getNextVoucherNo().subscribe(no => {
@@ -173,44 +173,38 @@ export class DispatchListComponent implements OnInit, AfterViewInit {
 
     this.drawer.open();
   }
-
   openEdit(dispatch: any) {
     this.editingId = dispatch.id;
 
-    // Clear existing details
-    while (this.details.length !== 0) {
-      this.details.removeAt(0);
-    }
+    // Step 1: Load full data from API
+    this.api.getById(dispatch.id).subscribe(full => {
 
-    // Populate form with dispatch data
-    this.form.patchValue({
-      date: dispatch.date,
-      voucherNo: dispatch.voucherNo,
-      partyId: this.getPartyIdByName(dispatch.partyName),
-      remark: dispatch.remark || '',
-      transportNo: dispatch.transportNo || ''
-    });
+      // Step 2: Clear details
+      while (this.details.length !== 0) this.details.removeAt(0);
 
-    // Add details
-    if (dispatch.details && dispatch.details.length > 0) {
-      dispatch.details.forEach((detail: any) => {
-        const detailGroup = this.createDetailFormGroup();
-        detailGroup.patchValue({
-          itemId: detail.itemId,
-          sizeId: detail.sizeId,
-          gradeId: detail.gradeId,
-          boxQty: detail.boxQty,
-          // REMOVED: breakageBox: detail.breakageBox || 0,
-          sqmt: detail.sqmt
-        });
-        this.details.push(detailGroup);
+      // Step 3: Patch main form
+      this.form.patchValue({
+        date: full.date,
+        voucherNo: full.voucherNo,
+        partyId: full.partyId,     // FULL DATA → correct
+        remark: full.remark || '',
+        billNo: full.billNo || ''
       });
-    } else {
-      // Add one empty row if no details
-      this.addItem();
-    }
 
-    this.drawer.open();
+      // Step 4: Patch details
+      full.details.forEach((d: any) => {
+        const fg = this.createDetailFormGroup();
+        fg.patchValue({
+          itemId: d.itemId,
+          sizeId: d.sizeId,
+          boxQty: d.boxQty,
+          sqmt: d.sqmt
+        });
+        this.details.push(fg);
+      });
+
+      this.drawer.open();
+    });
   }
 
   // Helper method to get party ID by name
@@ -238,11 +232,11 @@ export class DispatchListComponent implements OnInit, AfterViewInit {
       voucherNo: this.form.value.voucherNo,
       partyId: Number(this.form.value.partyId),
       remark: this.form.value.remark,
-      transportNo: this.form.value.transportNo,
+      billNo: this.form.value.billNo,
       details: this.details.value.map((detail: any) => ({
         itemId: Number(detail.itemId),
         sizeId: Number(detail.sizeId),
-        gradeId: Number(detail.gradeId),
+        // gradeId: Number(detail.gradeId),
         boxQty: Number(detail.boxQty),
         // REMOVED: breakageBox: detail.breakageBox ? Number(detail.breakageBox) : 0,
         sqmt: Number(detail.sqmt) || 0
@@ -296,5 +290,8 @@ export class DispatchListComponent implements OnInit, AfterViewInit {
 
       this.snack.open("📄 PDF Exported", "Close", { duration: 2000 });
     });
+  }
+  applyFilter(v: string) {
+    this.ds.filter = v.trim().toLowerCase();
   }
 }

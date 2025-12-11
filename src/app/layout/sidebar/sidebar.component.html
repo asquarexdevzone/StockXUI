@@ -1,7 +1,7 @@
-<div class="sidebar" [class.collapsed]="isCollapsed()">
+<div class="sidebar" [class.collapsed]="isCollapsed()" [class.mobile-open]="isMobileOpen">
 
   <div class="top-section">
-    <span class="logo" *ngIf="!isCollapsed()">Stock Manager</span>
+    <img *ngIf="!isCollapsed()" src="images/stock-x-logo.webp" alt="Logo" class="sidebar-logo" />
     <mat-icon class="toggle-btn" (click)="toggleSidebar()">menu</mat-icon>
   </div>
 
@@ -25,7 +25,7 @@
       <div class="submenu" *ngIf="expandedGroup() === item.label && !isCollapsed()">
 
         <div *ngFor="let child of item.children" class="submenu-item" [class.active]="isActive(child.path)"
-          (click)="child.path && router.navigate([child.path])">
+          (click)="child.path && navigate(child.path)">
 
           <span>{{ child.label }}</span>
         </div>
@@ -33,7 +33,7 @@
 
       <!-- Normal Single Menu -->
       <div *ngIf="!item.children" class="menu-item" [class.active]="isActive(item.path)"
-        (click)="item.path && router.navigate([item.path])">
+        (click)="item.path && navigate(item.path)">
 
         <mat-icon class="menu-icon">{{ item.icon }}</mat-icon>
         <span class="menu-label" *ngIf="!isCollapsed()">{{ item.label }}</span>
@@ -49,3 +49,4 @@
   </div>
 
 </div>
+<div class="mobile-overlay" *ngIf="isMobileOpen" (click)="closeMobileSidebar()"></div>
